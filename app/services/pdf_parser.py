@@ -5,7 +5,11 @@ from typing import Any
 from pypdf import PdfReader
 
 
-CASE_RE = re.compile(r"((?:SLP|C\.A\.|CIVIL APPEAL|W\.P\.|WRIT PETITION|CRL\.A\.|CRIMINAL APPEAL)[^\n]{0,80}\d+/\d{4})", re.IGNORECASE)
+MAX_CASE_TEXT_SPAN = 80
+CASE_RE = re.compile(
+    rf"((?:SLP|C\.A\.|CIVIL APPEAL|W\.P\.|WRIT PETITION|CRL\.A\.|CRIMINAL APPEAL)[^\n]{{0,{MAX_CASE_TEXT_SPAN}}}\d+/\d{{4}})",
+    re.IGNORECASE,
+)
 COURT_RE = re.compile(r"COURT\s*NO\.?\s*([A-Z0-9\-]+)", re.IGNORECASE)
 ITEM_RE = re.compile(r"ITEM\s*NO\.?\s*([A-Z0-9\-]+)", re.IGNORECASE)
 
