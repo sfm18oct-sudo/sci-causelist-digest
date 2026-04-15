@@ -84,7 +84,12 @@ def run_digest(db: Session, target_date: date | None = None) -> int:
             terms = DEFAULT_VARIANTS
 
         user_matches: list[CauseListItem] = []
-        db.query(Match).filter(Match.user_id == user.id).delete(synchronize_session="fetch")
+        today_item_ids = (
+            select(CauseListItem.id).join(CauseList).where(CauseList.list_date == list_date)
+        )
+        db.query(Match).filter(Match.user_id == user.id, Match.item_id.in_(today_item_ids)).delete(
+            synchronize_session="fetch"
+        )
 
         for item in stored_items:
             matched_term = match_counsel(item.advocates or "", terms)
