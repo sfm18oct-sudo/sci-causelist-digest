@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>SCI Cause List Digest</h1>
+<p>Logged in as <strong>{{ user.email }}</strong></p>
+<form method="post" action="/logout"><button type="submit">Logout</button></form>
+
+<h2>Tracked counsel terms (Mode A)</h2>
+<form method="post" action="/terms">
+  <input name="term" placeholder="Add counsel name variant" required>
+  <button type="submit">Add</button>
+</form>
+<table>
+  <tr><th>Term</th><th>Actions</th></tr>
+  {% for term in terms %}
+  <tr>
+    <td>
+      <form method="post" action="/terms/{{ term.id }}/edit" class="inline">
+        <input name="term" value="{{ term.term }}" required>
+        <button type="submit">Save</button>
+      </form>
+    </td>
+    <td>
+      <form method="post" action="/terms/{{ term.id }}/delete" class="inline">
+        <button type="submit">Delete</button>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+<h2>Operations</h2>
+<form method="post" action="/admin/run-fetch">
+  <input type="date" name="date_value" value="{{ today.isoformat() }}">
+  <button type="submit">Fetch + Match + Email</button>
+</form>
+<p>Daily scheduler runs at <strong>08:00 {{ timezone }}</strong>.</p>
+
+<h2>Today's matches ({{ today }})</h2>
+<p><a href="/matches/today">Open detailed view</a></p>
+<ul>
+  {% for match in today_matches %}
+    <li>{{ match.item.case_no }} - {{ match.item.parties }}</li>
+  {% else %}
+    <li>No matches yet.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

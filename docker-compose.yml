@@ -1,0 +1,59 @@
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: sci_digest
+      POSTGRES_USER: sci
+      POSTGRES_PASSWORD: sci
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  web:
+    build: .
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql+psycopg2://sci:sci@db:5432/sci_digest
+      APP_SECRET_KEY: ${APP_SECRET_KEY:?APP_SECRET_KEY is required}
+      APP_TIMEZONE: Asia/Kolkata
+      APP_MODE: A
+      SMTP_HOST: ${SMTP_HOST:-smtp.sendgrid.net}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USERNAME: ${SMTP_USERNAME:-apikey}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      SMTP_FROM: ${SMTP_FROM:-noreply@example.com}
+      SENDGRID_API_KEY: ${SENDGRID_API_KEY:-}
+      SENDGRID_FROM: ${SENDGRID_FROM:-}
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    volumes:
+      - .:/app
+
+  worker:
+    build: .
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql+psycopg2://sci:sci@db:5432/sci_digest
+      APP_SECRET_KEY: ${APP_SECRET_KEY:?APP_SECRET_KEY is required}
+      APP_TIMEZONE: Asia/Kolkata
+      APP_MODE: A
+      SMTP_HOST: ${SMTP_HOST:-smtp.sendgrid.net}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USERNAME: ${SMTP_USERNAME:-apikey}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      SMTP_FROM: ${SMTP_FROM:-noreply@example.com}
+      SENDGRID_API_KEY: ${SENDGRID_API_KEY:-}
+      SENDGRID_FROM: ${SENDGRID_FROM:-}
+    depends_on:
+      - db
+    command: python -m app.worker
+    volumes:
+      - .:/app
+
+volumes:
+  pgdata:
