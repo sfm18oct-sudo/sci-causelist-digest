@@ -1,7 +1,5 @@
 from datetime import date
 import logging
-from zoneinfo import ZoneInfo
-
 from fastapi import Depends, FastAPI, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
@@ -63,7 +61,7 @@ def home(request: Request, db: Session = Depends(get_db)):
             "terms": terms,
             "today": today,
             "today_matches": today_matches,
-            "timezone": ZoneInfo(settings.timezone),
+            "timezone": settings.timezone,
         },
     )
 

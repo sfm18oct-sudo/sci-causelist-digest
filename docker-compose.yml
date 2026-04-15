@@ -16,7 +16,7 @@ services:
     restart: unless-stopped
     environment:
       DATABASE_URL: postgresql+psycopg2://sci:sci@db:5432/sci_digest
-      APP_SECRET_KEY: dev-secret-change-me
+      APP_SECRET_KEY: ${APP_SECRET_KEY:?APP_SECRET_KEY is required}
       APP_TIMEZONE: Asia/Kolkata
       APP_MODE: A
       SMTP_HOST: ${SMTP_HOST:-smtp.sendgrid.net}
@@ -39,7 +39,7 @@ services:
     restart: unless-stopped
     environment:
       DATABASE_URL: postgresql+psycopg2://sci:sci@db:5432/sci_digest
-      APP_SECRET_KEY: dev-secret-change-me
+      APP_SECRET_KEY: ${APP_SECRET_KEY:?APP_SECRET_KEY is required}
       APP_TIMEZONE: Asia/Kolkata
       APP_MODE: A
       SMTP_HOST: ${SMTP_HOST:-smtp.sendgrid.net}

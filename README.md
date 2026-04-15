@@ -23,6 +23,7 @@ Web app that sends a daily email digest of Supreme Court of India cause list ite
 ## Local development (Docker Compose)
 
 ```bash
+export APP_SECRET_KEY='replace-with-a-strong-random-value'
 docker compose up --build
 ```
 
@@ -38,7 +39,7 @@ Services:
 Set in shell or `.env` (Docker Compose will read them):
 
 - `DATABASE_URL` (default in compose)
-- `APP_SECRET_KEY`
+- `APP_SECRET_KEY` (**required**, no default)
 - `APP_TIMEZONE` (default `Asia/Kolkata`)
 - `APP_MODE` (default `A`)
 
