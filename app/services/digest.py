@@ -85,7 +85,6 @@ def run_digest(db: Session, target_date: date | None = None) -> int:
 
         user_matches: list[CauseListItem] = []
         db.query(Match).filter(Match.user_id == user.id).delete(synchronize_session=False)
-        db.commit()
 
         for item in stored_items:
             matched_term = match_counsel(item.advocates or "", terms)
